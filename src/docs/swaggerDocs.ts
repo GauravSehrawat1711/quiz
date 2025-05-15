@@ -425,5 +425,104 @@
  *       500:
  *         description: Server error
  */
+/**
+ * @swagger
+ * tags:
+ *   name: Quiz
+ *   description: Quiz participation (start, submit)
+ */
+
+/**
+ * @swagger
+ * /quizzes/{id}/submit:
+ *   post:
+ *     summary: Submit answers for a quiz
+ *     description: Submit quiz answers, receive score and detailed feedback.
+ *     tags: [Quiz]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: Quiz ID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       description: User's answers to quiz questions
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - answers
+ *             properties:
+ *               answers:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   required:
+ *                     - questionId
+ *                     - selectedIndex
+ *                   properties:
+ *                     questionId:
+ *                       type: integer
+ *                       example: 101
+ *                     selectedIndex:
+ *                       type: integer
+ *                       description: Index of selected option
+ *                       example: 2
+ *     responses:
+ *       200:
+ *         description: Quiz submitted successfully with results
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     score:
+ *                       type: integer
+ *                       example: 7
+ *                     correctAnswers:
+ *                       type: integer
+ *                       example: 7
+ *                     totalQuestions:
+ *                       type: integer
+ *                       example: 10
+ *                     feedback:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           questionId:
+ *                             type: integer
+ *                             example: 101
+ *                           selectedIndex:
+ *                             type: integer
+ *                             example: 2
+ *                           correctIndex:
+ *                             type: integer
+ *                             example: 2
+ *                           correct:
+ *                             type: boolean
+ *                             example: true
+ *       400:
+ *         description: Bad request or validation error
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Time limit exceeded
+ *       404:
+ *         description: Quiz or session not found
+ *       500:
+ *         description: Internal server error
+ */
 
 export default {};
