@@ -1,35 +1,17 @@
-// src/services/question.service.ts
-import { QuestionRepository } from '../repositories/question.repository';
+import * as QuestionRepo from '../repositories/question.repository';
 
-export class QuestionService {
-  private questionRepository = new QuestionRepository();
+export const createQuestion = async (data: {
+  quizId: number;
+  question_text: string;
+  options: string[];
+  correct_option_index: number;
+  userId: number;
+}) => {
+  return await QuestionRepo.createQuestion(data);
+};
 
-  // Create a new question
-  public async createQuestion(questionData: {
-    quizId: number;
-    questionText: string;
-    options: string[];
-    correctAnswer: string;
-  }) {
-    return await this.questionRepository.createQuestion(questionData);
-  }
 
-  // Update a question
-  public async updateQuestion(id: number, questionData: {
-    questionText: string;
-    options: string[];
-    correctAnswer: string;
-  }) {
-    return await this.questionRepository.updateQuestion(id, questionData);
-  }
 
-  // Delete a question
-  public async deleteQuestion(id: number) {
-    return await this.questionRepository.deleteQuestion(id);
-  }
-
-  // Get questions by quizId
-  public async getQuestionsByQuizId(quizId: number) {
-    return await this.questionRepository.getQuestionsByQuizId(quizId);
-  }
-}
+export const getQuestionsByQuizId = async (quizId: number) => {
+  return await QuestionRepo.getQuestionsByQuizId(quizId);
+};

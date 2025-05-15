@@ -1,45 +1,51 @@
-// src/repositories/question.repository.ts
 import { AppDataSource } from '../config/data-source';
 import { Question } from '../entities/Question';
+import { Quiz } from '../entities/Quiz';
+import { User } from '../entities/User';
 
-export class QuestionRepository {
-  private questionRepository = AppDataSource.getRepository(Question);
+const questionRepository = AppDataSource.getRepository(Question);
+const quizRepository = AppDataSource.getRepository(Quiz);
+const userRepository = AppDataSource.getRepository(User);
 
-  // Create a new question
-  public async createQuestion(questionData: {
-    quizId: number;
-    questionText: string;
-    options: string[];
-    correctAnswer: string;
-  }) {
-    const newQuestion = this.questionRepository.create(questionData);
-    return await this.questionRepository.save(newQuestion);
-  }
+export const createQuestion = async (data: {
+  quizId: number;
+  question_text: string;
+  options: string[];
+  correct_option_index: number;
+  userId: number;
+}) => {
+  const quiz = await quizRepository.findOneBy({ id: data.quizId });
+  if (!quiz) return { error: 'Quiz not found' };
 
-  // Update a question
-  public async updateQuestion(id: number, questionData: {
-    questionText: string;
-    options: string[];
-    correctAnswer: string;
-  }) {
-    const question = await this.questionRepository.findOneBy({ id });
-    if (!question) return null;
+  const user = await userRepository.findOneBy({ id: data.userId });
+  if (!user) return { error: 'User not found' };
 
-    Object.assign(question, questionData);
-    return await this.questionRepository.save(question);
-  }
+  const question = questionRepository.create({
+    question_text: data.question_text,
+    options: data.options,
+    correct_option_index: data.correct_option_index,
+    quiz,
+    user,
+  });
 
-  // Delete a question
-  public async deleteQuestion(id: number) {
-    const question = await this.questionRepository.findOneBy({ id });
-    if (!question) return null;
+  const saved = await questionRepository.save(question);
+  const sanitized = {
+    id: saved.id,
+    question_text: saved.question_text,
+    options: saved.options,
+    correct_option_index: saved.correct_option_index,
+    quizId: data.quizId,
+    userId: data.userId,
+    createdAt: saved.createdAt,
+  };
 
-    await this.questionRepository.remove(question);
-    return question;
-  }
+  return {data: sanitized};
+};
 
-  // Get questions by quizId
-  public async getQuestionsByQuizId(quizId: number) {
-    return await this.questionRepository.find({ where: { id : quizId } });
-  }
-}
+
+
+export const getQuestionsByQuizId = async (quizId: number) => {
+  return await questionRepository.find({
+    where: { quiz: { id: quizId } },
+  });
+};

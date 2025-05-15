@@ -1,26 +1,29 @@
-
-import {  Repository } from 'typeorm';
+import { AppDataSource } from '../config/data-source';
 import { Result } from '../entities/Result';
 
-export class ResultRepository extends Repository<Result> {
+const resultRepo = AppDataSource.getRepository(Result);
 
+export const createResult = async (
+  quizId: number,
+  userId: number,
+  score: number,
+  correctAnswers: number,
+  totalQuestions: number
+) => {
+  const result = resultRepo.create({
+    user: { id: userId },
+    quiz: { id: quizId },
+    score,
+    correctAnswers,
+    totalQuestions,
+  });
 
-  async createResult(quizId: number, userId: number, score: number, correctAnswers: number, totalQuestions: number) {
-    const result = this.create({
-      user: { id: userId },
-      quiz: { id: quizId },
-      score,
-      correctAnswers,
-      totalQuestions,
-    });
-    return this.save(result);
-  }
+  return await resultRepo.save(result);
+};
 
-  async getResultsByUser(userId: number) {
-    return this.find({ where: { user: { id: userId } } });
-  }
-
-  async getResultById(resultId: number) {
-    return this.findOne({ where: { id: resultId } });
-  }
-}
+export const getResultsByUser = async (userId: number) => {
+  return await resultRepo.find({
+    where: { user: { id: userId } }, 
+    order: { createdAt: 'DESC' },
+  });
+};

@@ -418,28 +418,4 @@
  *         description: Server error
  */
 
-/**
- * @swagger
- * /results/{id}:
- *   get:
- *     summary: Get a specific result by ID
- *     description: Fetch a single result using its unique ID.
- *     tags: [Result]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID of the result
- *     responses:
- *       200:
- *         description: Result details
- *       404:
- *         description: Result not found
- *       500:
- *         description: Server error
- */
 export default {};

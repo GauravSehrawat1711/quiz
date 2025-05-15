@@ -1,65 +1,45 @@
 
 import { Request, Response } from 'express';
-import { QuestionService } from '../services/question.service';
+import  * as questionService  from '../services/question.service';
+import { sendResponse } from '../utils/sendResponse';
 
-const questionService = new QuestionService();
 
-export const createQuestion = async (req: Request, res: Response) : Promise<any> => {
+
+export const createQuestion = async (req: any, res: Response): Promise<any> => {
   try {
     const { quizId } = req.params;
-    const { questionText, options, correctAnswer } = req.body;
-    
-    const newQuestion = await questionService.createQuestion({
+    const { question_text, options, correct_option_index } = req.body;
+    const userId = req.user?.userId;
+
+    const result = await questionService.createQuestion({
       quizId: Number(quizId),
-      questionText,
+      question_text,
       options,
-      correctAnswer
+      correct_option_index,
+      userId,
     });
 
-    return res.status(201).json(newQuestion);
-  } catch (error) {
-    return res.status(500).json({ message: 'Error creating question', error });
-  }
-};
+    if (result.error) {
+      return sendResponse({
+        res,
+        statusCode: 400,
+        error: result.error,
+      });
+    }
 
-export const updateQuestion = async (req: Request, res: Response)  : Promise<any>=> {
-  try {
-    const { id } = req.params;
-    const { questionText, options, correctAnswer } = req.body;
-
-    const updatedQuestion = await questionService.updateQuestion(Number(id), {
-      questionText,
-      options,
-      correctAnswer
+    return sendResponse({
+      res,
+      statusCode: 201,
+      data: result?.data,
     });
-
-    if (!updatedQuestion) {
-      return res.status(404).json({ message: 'Question not found' });
-    }
-
-    return res.status(200).json(updatedQuestion);
-  } catch (error) {
-    return res.status(500).json({ message: 'Error updating question', error });
+  } catch (error: any) {
+    return sendResponse({
+      res,
+      statusCode: 500,
+      error: error.message || 'Failed to create question'
+    });
   }
 };
-
-
-export const deleteQuestion = async (req: Request, res: Response) : Promise<any> => {
-  try {
-    const { id } = req.params;
-
-    const deletedQuestion = await questionService.deleteQuestion(Number(id));
-
-    if (!deletedQuestion) {
-      return res.status(404).json({ message: 'Question not found' });
-    }
-
-    return res.status(200).json({ message: 'Question deleted successfully' });
-  } catch (error) {
-    return res.status(500).json({ message: 'Error deleting question', error });
-  }
-};
-
 
 export const getQuestionsByQuizId = async (req: Request, res: Response)  : Promise<any>=> {
   try {

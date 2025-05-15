@@ -1,5 +1,4 @@
 
-import { User } from '../entities/User';
 import * as QuizRepo from '../repositories/quiz.repository';
 
 export const createQuiz = (data: { title: string; description?: string , userId? : any }) => {
