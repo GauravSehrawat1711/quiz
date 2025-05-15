@@ -290,49 +290,7 @@
  *     description: Endpoints related to quiz results
  */
 
-/**
- * @swagger
- * /results:
- *   post:
- *     summary: Create a new quiz result
- *     description: Submit a user's result after completing a quiz.
- *     tags: [Result]
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - quizId
- *               - userId
- *               - score
- *               - correctAnswers
- *               - totalQuestions
- *             properties:
- *               quizId:
- *                 type: integer
- *                 example: 1
- *               userId:
- *                 type: integer
- *                 example: 5
- *               score:
- *                 type: integer
- *                 example: 8
- *               correctAnswers:
- *                 type: integer
- *                 example: 4
- *               totalQuestions:
- *                 type: integer
- *                 example: 5
- *     responses:
- *       201:
- *         description: Result created successfully
- *       500:
- *         description: Server error
- */
+
 
 /**
  * @swagger
