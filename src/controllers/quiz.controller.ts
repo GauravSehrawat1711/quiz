@@ -3,11 +3,11 @@ import * as QuizService from '../services/quiz.service';
 import { IResponse, sendResponse } from '../utils/sendResponse';
 
 export const createQuiz = async (req: any, res: Response)  : Promise<any>=> {
-  const { title, description } = req.body;
+  const { title, description , time_limit} = req.body;
   const { userId } = req.user;
 
   try {
-    const quiz = await QuizService.createQuiz({ title, description, userId });
+    const quiz = await QuizService.createQuiz({ title, description, userId ,time_limit});
     return sendResponse({
       res,
       statusCode: 201,

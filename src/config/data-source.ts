@@ -4,6 +4,7 @@ import { Quiz } from '../entities/Quiz';
 import { Question } from '../entities/Question';
 import { Result } from '../entities/Result';
 import dotenv from 'dotenv';
+import {  QuizSession } from '../entities/QuizSession';
 dotenv.config();
 export const AppDataSource = new DataSource({
   type: 'mysql',
@@ -14,5 +15,5 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME || 'quiz_db',
   synchronize: true,
   logging: false,
-  entities: [User, Quiz, Question, Result],
+  entities: [User, Quiz, Question, Result,QuizSession],
 });

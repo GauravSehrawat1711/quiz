@@ -9,6 +9,6 @@ import { authorizeRole } from '../middlewares/role.middleware';
 const router = Router();
 
 router.post('/', authenticate, authorizeRole('user'), validate(createResultSchema), createResultController);
-router.get('/user/:userId', authenticate,authorizeRole('user'), getResultsByUserController);
+router.get('/', authenticate,authorizeRole('user'), getResultsByUserController);
 
 export default router;

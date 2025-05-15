@@ -96,11 +96,14 @@
  *             required:
  *               - title
  *               - description
+ *               - time_limit
  *             properties:
  *               title:
  *                 type: string
  *               description:
  *                  type: string
+ *               time_limit:
+ *                  type: number
  *     responses:
  *       201:
  *         description: Quiz created successfully
@@ -133,6 +136,10 @@
  *             properties:
  *               title:
  *                 type: string
+ *               description:
+ *                 type : string
+ *               time_limit:
+ *                 type : number
  *     responses:
  *       200:
  *         description: Quiz updated successfully
@@ -250,76 +257,8 @@
  *         description: Forbidden (admin only)
  */
 
-/**
- * @swagger
- * /questions/{id}:
- *   put:
- *     summary: Update an existing question
- *     description: This endpoint allows an admin to update an existing question.
- *     security:
- *       - bearerAuth: []
- *     tags:
- *       - Question
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: The ID of the question to update
- *         schema:
- *           type: integer
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - questionText
- *               - options
- *               - correctAnswer
- *             properties:
- *               questionText:
- *                 type: string
- *               options:
- *                 type: array
- *                 items:
- *                   type: string
- *               correctAnswer:
- *                 type: string
- *     responses:
- *       200:
- *         description: Question updated successfully
- *       400:
- *         description: Bad request
- *       403:
- *         description: Forbidden (admin only)
- */
 
-/**
- * @swagger
- * /questions/{id}:
- *   delete:
- *     summary: Delete a question
- *     description: This endpoint allows an admin to delete a question.
-  *     security:
- *       - bearerAuth: []
- *     tags:
- *       - Question
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: The ID of the question to delete
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: Question deleted successfully
- *       400:
- *         description: Bad request
- *       403:
- *         description: Forbidden (admin only)
- */
+
 
 /**
  * @swagger
@@ -414,6 +353,75 @@
  *     responses:
  *       200:
  *         description: List of results
+ *       500:
+ *         description: Server error
+ */
+/**
+ * @swagger
+ * tags:
+ *   name: Quiz
+ *   description: Quiz participation (start, submit)
+ */
+
+/**
+ * @swagger
+ * /quizzes/{id}/start:
+ *   get:
+ *     summary: Start a quiz
+ *     description: Creates a quiz session for the user and returns quiz questions without correct answers.
+ *     tags: [Quiz]
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID of the quiz to start
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Quiz started successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: success
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     quiz:
+ *                       type: object
+ *                       properties:
+ *                         id:
+ *                           type: number
+ *                         title:
+ *                           type: string
+ *                         time_limit:
+ *                           type: number
+ *                           description: Time limit in seconds
+ *                     questions:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           id:
+ *                             type: number
+ *                           question_text:
+ *                             type: string
+ *                           options:
+ *                             type: array
+ *                             items:
+ *                               type: string
+ *                     sessionId:
+ *                       type: number
+ *       404:
+ *         description: Quiz not found
+ *       401:
+ *         description: Unauthorized
  *       500:
  *         description: Server error
  */

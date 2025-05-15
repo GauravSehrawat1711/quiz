@@ -8,7 +8,14 @@ export const createResultController = async (req: any, res: Response): Promise<a
     const userId = req.user?.userId;
 
     const result = await createResult(quizId, userId, score, correctAnswers, totalQuestions);
-
+    if (result.error) {
+      return sendResponse({
+        res,
+        statusCode: 400,
+        error: result.error,
+      });
+    } 
+    
     return sendResponse({
       res,
       statusCode: 201,

@@ -20,6 +20,9 @@ export class Quiz {
   @Column()
   userId!: number; 
 
+  @Column()
+  time_limit!: number;
+
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' }) 
   user!: User;

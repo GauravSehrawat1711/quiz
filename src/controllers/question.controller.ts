@@ -47,8 +47,16 @@ export const getQuestionsByQuizId = async (req: Request, res: Response)  : Promi
 
     const questions = await questionService.getQuestionsByQuizId(Number(quizId));
 
-    return res.status(200).json(questions);
-  } catch (error) {
-    return res.status(500).json({ message: 'Error fetching questions', error });
+    return sendResponse({
+      res,
+      statusCode: 200,
+      data: questions,
+    });
+  } catch (error :any) {
+    return sendResponse({
+      res,
+      statusCode: 500,
+      error: error.message || 'Failed to get question'
+    });
   }
 };

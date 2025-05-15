@@ -7,7 +7,6 @@ export const authorizeRole = (role: 'admin' | 'user') => {
     const user = req.user;
 
     if (!user || user.role !== role) {
-      // return res.status(403).json({ message: 'Forbidden: Insufficient permissions' });
       return sendResponse({res,statusCode :403,data :null,error :{message: 'Forbidden: Insufficient permissions'} })
     }
 
