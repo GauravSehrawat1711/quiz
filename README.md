@@ -2,6 +2,9 @@
 
 A backend API for a Quiz Engine built with **Node.js**, **TypeScript**, **Express**, **TypeORM**, and **MySQL**.
 
+Note : I have added database scheme image in directory only
+
+
 ---
 
 ## Prerequisites
@@ -61,6 +64,5 @@ npm run dev
 Open your browser and visit:
 
 http://localhost:5001/api-docs
-
 
 
