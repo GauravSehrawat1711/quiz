@@ -13,6 +13,6 @@ import { validate } from '../middlewares/validate';
 const router = Router();
 
 router.post('/:quizId', authenticate, authorizeRole('admin'),validate(createQuestionSchema), createQuestion);
-router.get('/quiz/:quizId',authenticate, getQuestionsByQuizId);
+router.get('/quiz/:quizId',authenticate, authorizeRole('admin') ,getQuestionsByQuizId);
 
 export default router;

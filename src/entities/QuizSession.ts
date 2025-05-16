@@ -30,5 +30,8 @@ import {
   
     @CreateDateColumn()
     startedAt!: Date;
+
+    @Column()
+    isActive!: boolean;
   }
   

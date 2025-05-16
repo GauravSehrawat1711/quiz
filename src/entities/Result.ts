@@ -25,4 +25,7 @@ export class Result {
 
   @CreateDateColumn()
   createdAt!: Date;
+
+  @Column('int')
+  sessionId!: number; 
 }

@@ -26,6 +26,8 @@ export const submitQuiz = async (
     order: { startedAt: 'DESC' }, 
   });
   if (!session) return { error: 'Quiz session not found. Start quiz first.' };
+  if (!session.isActive) return { error: 'Quiz is already attempted.' };
+  
 
   // Validate time limit
   const now = new Date();
@@ -39,7 +41,7 @@ export const submitQuiz = async (
   let correctAnswers = 0;
 
   // Clear previous attempts for session (if any)
-  await attemptRepo.delete({ sessionId: session.id });
+  await sessionRepo.update({ id: session.id },{isActive:false});
 
   // Save attempts & calculate score
   for (const answer of answers) {
@@ -69,19 +71,24 @@ export const submitQuiz = async (
     score,
     correctAnswers,
     totalQuestions,
+    sessionId : session.id
   });
   await resultRepo.save(result);
 
-  // Prepare feedback array
   const feedback = answers.map(answer => {
     const question = questionMap.get(answer.questionId);
+    const correctIndex = question?.correct_option_index;
+    const selectedIndex = answer.selectedIndex;
+  
     return {
-      questionId: answer.questionId,
-      selectedIndex: answer.selectedIndex,
-      correctIndex: question?.correct_option_index ?? null,
-      correct: question?.correct_option_index === answer.selectedIndex,
+      question: question?.question_text ?? '',
+      selectedOption: question?.options[selectedIndex] ?? null,
+      correctAnswer: question?.options[correctIndex!] ?? null,
+      correct: selectedIndex === correctIndex,
     };
   });
+  
+  
 
   return {
     score,

@@ -11,7 +11,7 @@ export const startQuiz = async (quizId: number, userId: number) => {
   const quiz = await quizRepo.findOneBy({ id: quizId });
   if (!quiz) return { error: 'Quiz not found' };
 
-  const session = sessionRepo.create({ quizId, userId });
+  const session = sessionRepo.create({ quizId, userId,isActive:true });
   await sessionRepo.save(session);
 
   const questions = await questionRepo.find({
